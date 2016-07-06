@@ -24,7 +24,7 @@ public class StreamUtil {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         int len;
 
-        if ((len = is.read()) != -1) {
+        if ((len = is.read(b)) != -1) {
             byteArrayOutputStream.write(b, 0, len);
         }
 
