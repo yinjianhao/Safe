@@ -28,7 +28,11 @@ public class StreamUtil {
             byteArrayOutputStream.write(b, 0, len);
         }
 
-        return byteArrayOutputStream.toString();
+        is.close();
+        byteArrayOutputStream.close();
+
+        return byteArrayOutputStream.toString("utf-8");
+//        return new String(byteArrayOutputStream.toByteArray(), "UTF-8");
     }
 
     /**
@@ -40,12 +44,13 @@ public class StreamUtil {
      */
     public static String stream2String2(InputStream is) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder stringBuffer = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         String line;
         if ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append(line);
+            stringBuilder.append(line);
         }
 
-        return stringBuffer.toString();
+        is.close();
+        return stringBuilder.toString();
     }
 }

@@ -46,7 +46,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("http://10.17.12.23:8080/version.json");
+                    URL url = new URL("http://10.0.2.2:8080/version.json");
                     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                     httpURLConnection.setRequestMethod("GET");
                     httpURLConnection.setConnectTimeout(8000);
@@ -54,15 +54,15 @@ public class SplashActivity extends AppCompatActivity {
                     httpURLConnection.connect();
                     if (httpURLConnection.getResponseCode() == 200) {
                         InputStream is = httpURLConnection.getInputStream();
-                        String inputString = StreamUtil.stream2String(is);
+                        String inputString = StreamUtil.stream2String2(is);
                         JSONObject jsonObject = new JSONObject(inputString);
                         String versionName = jsonObject.getString("versionName");
                         int versionCode = jsonObject.getInt("versionCode");
                         Log.d(TAG, versionName);
                         if(versionCode > getVersionCode()) {
-                            Toast.makeText(SplashActivity.this, "有更新", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "有更新");
                         } else {
-                            Toast.makeText(SplashActivity.this, "没有更新", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "没有更新");
                         }
                     }
                 } catch (IOException | JSONException e) {
