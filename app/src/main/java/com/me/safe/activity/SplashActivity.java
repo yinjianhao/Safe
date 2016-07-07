@@ -1,15 +1,20 @@
 package com.me.safe.activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,9 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URI;
 import java.net.URL;
 
 public class SplashActivity extends AppCompatActivity {
@@ -38,6 +40,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private static final int CODE_UPDATE_DIALOG = 1;
     private static final int CODE_ENTER_HOME = 2;
+    private static final int CODE_WRITE_STORAGE = 3;
 
     private String mVersionName;
     private int mVersionCode;
@@ -134,7 +137,12 @@ public class SplashActivity extends AppCompatActivity {
         builder.setPositiveButton("立即升级", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                downloadApk();
+                //判断运行时权限
+                if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    downloadApk();
+                } else {
+                    applyPermission();
+                }
             }
         });
         builder.setNegativeButton("以后再说", new DialogInterface.OnClickListener() {
@@ -146,20 +154,43 @@ public class SplashActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * 申请权限
+     */
+    private void applyPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }, CODE_WRITE_STORAGE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CODE_WRITE_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            downloadApk();
+        }
+    }
+
+    /**
+     * 下载apk
+     */
     private void downloadApk() {
 
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            RequestParams requestParams = new RequestParams("http://10.0.2.2:8080/app-debug.apk");
-            requestParams.setSaveFilePath(Environment.getExternalStorageDirectory().getAbsolutePath());
+            RequestParams requestParams = new RequestParams(mVersionUrl);
+            requestParams.setSaveFilePath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/app-debug.apk");
             Callback.Cancelable cancelable = x.http().get(requestParams, new Callback.CommonCallback<File>() {
                 @Override
                 public void onSuccess(File result) {
-
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    Uri uri = Uri.fromFile(result);
+                    intent.setDataAndType(uri, "application/vnd.android.package-archive");
+                    startActivity(intent);
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-
+                    ex.printStackTrace();
                 }
 
                 @Override
@@ -169,7 +200,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinished() {
-
+                    Log.d(TAG, "onFinished");
                 }
             });
         } else {
