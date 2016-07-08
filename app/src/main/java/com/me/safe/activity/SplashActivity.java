@@ -151,6 +151,12 @@ public class SplashActivity extends AppCompatActivity {
                 enterHome();
             }
         });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                enterHome();
+            }
+        });
         builder.show();
     }
 
@@ -185,7 +191,7 @@ public class SplashActivity extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     Uri uri = Uri.fromFile(result);
                     intent.setDataAndType(uri, "application/vnd.android.package-archive");
-                    startActivity(intent);
+                    startActivityForResult(intent, 1);
                 }
 
                 @Override
@@ -237,5 +243,13 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1) {
+            enterHome();
+        }
     }
 }
