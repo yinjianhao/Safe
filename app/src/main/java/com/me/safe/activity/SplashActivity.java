@@ -3,6 +3,7 @@ package com.me.safe.activity;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -74,7 +75,13 @@ public class SplashActivity extends AppCompatActivity {
             tvVersionName.setText("版本号:" + getVersionName());
         }
 
-        checkUpdate();
+        SharedPreferences setting = getSharedPreferences("setting", MODE_PRIVATE);
+        if (setting.getBoolean("update", true)) {
+            checkUpdate();
+        } else {
+            mHandler.sendEmptyMessageDelayed(CODE_ENTER_HOME, 2000);
+        }
+
     }
 
     /**
@@ -90,8 +97,8 @@ public class SplashActivity extends AppCompatActivity {
                     URL url = new URL("http://10.0.2.2:8080/version.json");
                     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                     httpURLConnection.setRequestMethod("GET");
-                    httpURLConnection.setConnectTimeout(8000);
-                    httpURLConnection.setReadTimeout(8000);
+                    httpURLConnection.setConnectTimeout(2000);
+                    httpURLConnection.setReadTimeout(2000);
                     httpURLConnection.connect();
                     if (httpURLConnection.getResponseCode() == 200) {
                         InputStream is = httpURLConnection.getInputStream();
@@ -248,7 +255,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1) {
+        if (requestCode == 1) {
             enterHome();
         }
     }

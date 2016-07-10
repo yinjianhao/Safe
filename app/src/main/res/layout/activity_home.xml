@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/tv_title"
         style="@style/titleStyle"
-        android:text="New Text" />
+        android:text="功能列表" />
 
     <TextView
         android:id="@+id/tv_des"
