@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.me.safe.R;
 import com.me.safe.dialog.CreatePwdDialog;
+import com.me.safe.dialog.InputDialog;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -61,21 +62,30 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if (TextUtils.isEmpty(savedPwd)) {
             showCreateDialog();
         } else {
-            showPwdDialog();
+            showPwdDialog(savedPwd);
         }
     }
 
     /**
      * 输入密码对话框
      */
-    private void showPwdDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setPositiveButton("a", new DialogInterface.OnClickListener() {
+    private void showPwdDialog(final String savedPwd) {
+        InputDialog dialog = new InputDialog(this, "输入密码", "请输入密码", new InputDialog.OnBtnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onConfirm(InputDialog dialog, String pwd) {
+                if(savedPwd.equals(pwd)) {
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(getApplicationContext(), "密码错误", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancel(InputDialog dialog) {
+
             }
         });
+        dialog.show();
     }
 
     /**
@@ -89,6 +99,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(getApplicationContext(), "请输入密码", Toast.LENGTH_SHORT).show();
                 } else {
                     if(pwd.equals(pwdConfirm)) {
+                        getSharedPreferences("setting", MODE_PRIVATE).edit().putString("password", pwd).apply();
                         dialog.dismiss();
                     } else {
                         Toast.makeText(getApplicationContext(), "两次密码不相同", Toast.LENGTH_SHORT).show();
