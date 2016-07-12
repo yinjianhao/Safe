@@ -59,8 +59,6 @@ public class SettingItemView extends LinearLayout {
         descOn = attrs.getAttributeValue(NAMESPACE, "desc_on");
         descOff = attrs.getAttributeValue(NAMESPACE, "desc_off");
         tvTitle.setText(title);
-        SharedPreferences setting = mContext.getSharedPreferences("setting", Context.MODE_PRIVATE);
-        setChecked(setting.getBoolean("update", true));
     }
 
     public Boolean isChecked() {

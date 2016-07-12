@@ -20,7 +20,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.HomeActivity" />
-        <activity android:name=".activity.SettingActivity"></activity>
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.Guide1Activity" />
+        <activity android:name=".activity.Guide2Activity" />
+        <activity android:name=".activity.FinderActivity" />
+        <activity android:name=".activity.Guide3Activity" />
+        <activity android:name=".activity.Guide4Activity"></activity>
     </application>
 
 </manifest>

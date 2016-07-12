@@ -1,5 +1,6 @@
 package com.me.safe.activity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         svUpdate = (SettingItemView) findViewById(R.id.sv_update);
         if (svUpdate != null) {
             svUpdate.setOnClickListener(this);
+            SharedPreferences setting = getSharedPreferences("setting", Context.MODE_PRIVATE);
+            svUpdate.setChecked(setting.getBoolean("update", true));
         }
     }
 

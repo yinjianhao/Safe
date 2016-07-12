@@ -1,9 +1,7 @@
 package com.me.safe.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -74,6 +72,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onConfirm(InputDialog dialog, String pwd) {
                 if(savedPwd.equals(pwd)) {
+                    startActivity(new Intent(HomeActivity.this, FinderActivity.class));
                     dialog.dismiss();
                 } else {
                     Toast.makeText(getApplicationContext(), "密码错误", Toast.LENGTH_SHORT).show();
@@ -100,6 +99,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     if(pwd.equals(pwdConfirm)) {
                         getSharedPreferences("setting", MODE_PRIVATE).edit().putString("password", pwd).apply();
+                        startActivity(new Intent(HomeActivity.this, FinderActivity.class));
                         dialog.dismiss();
                     } else {
                         Toast.makeText(getApplicationContext(), "两次密码不相同", Toast.LENGTH_SHORT).show();
