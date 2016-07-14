@@ -8,7 +8,7 @@ import android.widget.Button;
 
 import com.me.safe.R;
 
-public class Guide3Activity extends AppCompatActivity implements View.OnClickListener{
+public class Guide3Activity extends BaseGuideActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +26,35 @@ public class Guide3Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
+    public void SlidingRight() {
+        showRight();
+    }
+
+    @Override
+    public void SlidingLeft() {
+        showLeft();
+    }
+
+    private void showRight() {
+        startActivity(new Intent(this, Guide4Activity.class));
+        finish();
+        overridePendingTransition(R.anim.anim_rtl_enter, R.anim.anim_rtl_out);
+    }
+
+    private void showLeft() {
+        startActivity(new Intent(this, Guide2Activity.class));
+        finish();
+        overridePendingTransition(R.anim.anim_ltr_enter, R.anim.anim_ltr_out);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
-                startActivity(new Intent(this, Guide4Activity.class));
-                finish();
+                showRight();
                 break;
             case R.id.btn_prev:
-                startActivity(new Intent(this, Guide2Activity.class));
-                finish();
+                showLeft();
                 break;
         }
     }

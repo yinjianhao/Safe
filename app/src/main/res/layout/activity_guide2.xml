@@ -25,6 +25,7 @@
             android:textSize="18sp" />
 
         <com.me.safe.view.SettingItemView
+            android:id="@+id/sv_sim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:desc_off="sim卡未绑定"

@@ -1,14 +1,13 @@
 package com.me.safe.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.me.safe.R;
 
-public class Guide1Activity extends AppCompatActivity implements View.OnClickListener {
+public class Guide1Activity extends BaseGuideActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +21,26 @@ public class Guide1Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
+    public void SlidingRight() {
+        showRight();
+    }
+
+    @Override
+    public void SlidingLeft() {
+
+    }
+
+    private void showRight() {
+        startActivity(new Intent(this, Guide2Activity.class));
+        finish();
+        overridePendingTransition(R.anim.anim_rtl_enter, R.anim.anim_rtl_out);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
-                startActivity(new Intent(this, Guide2Activity.class));
-                finish();
+                showRight();
                 break;
         }
     }

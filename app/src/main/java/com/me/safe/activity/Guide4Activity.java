@@ -8,7 +8,7 @@ import android.widget.Button;
 
 import com.me.safe.R;
 
-public class Guide4Activity extends AppCompatActivity implements View.OnClickListener{
+public class Guide4Activity extends BaseGuideActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,16 +26,35 @@ public class Guide4Activity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
+    public void SlidingRight() {
+        showRight();
+    }
+
+    @Override
+    public void SlidingLeft() {
+        showLeft();
+    }
+
+    private void showRight() {
+        getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("isGuide", true).apply();
+        startActivity(new Intent(this, FinderActivity.class));
+        finish();
+    }
+
+    private void showLeft() {
+        startActivity(new Intent(this, Guide3Activity.class));
+        finish();
+        overridePendingTransition(R.anim.anim_ltr_enter, R.anim.anim_ltr_out);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
-//                getSharedPreferences("setting", MODE_PRIVATE).edit().putBoolean("isGuide", true).apply();
-                startActivity(new Intent(this, FinderActivity.class));
-                finish();
+                showRight();
                 break;
             case R.id.btn_prev:
-                startActivity(new Intent(this, Guide3Activity.class));
-                finish();
+                showLeft();
                 break;
         }
     }
