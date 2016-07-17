@@ -1,11 +1,13 @@
 package com.me.safe.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -71,6 +73,10 @@ public class Guide2Activity extends BaseGuideActivity implements View.OnClickLis
         if (!svSim.isChecked()) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                 handleSim();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
+//                判断是否需要 向用户解释，为什么要申请该权限
+//                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE);
             }
         } else {
             sharedPreferences.edit().remove("simNUm").apply();

@@ -1,9 +1,17 @@
 package com.me.safe.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,6 +27,7 @@ import com.me.safe.dialog.InputDialog;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "HomeActivity";
     private String[] mNames;
     private int[] mLogos;
 
@@ -44,6 +53,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         case 0:
                             showDialog();
                             break;
+                        case 2:
+                            Intent intent = new Intent();
+                            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            intent.setData(Uri.fromParts("package", getPackageName(), null));
+                            startActivity(intent);
+                            break;
                         case 8:
                             startActivity(new Intent(HomeActivity.this, SettingActivity.class));
                             break;
@@ -52,6 +67,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             });
+        }
+
+        //判断权限
+        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED)) {
+            //申请权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS}, 0);
         }
     }
 
@@ -71,7 +92,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         InputDialog dialog = new InputDialog(this, "输入密码", "请输入密码", new InputDialog.OnBtnClickListener() {
             @Override
             public void onConfirm(InputDialog dialog, String pwd) {
-                if(savedPwd.equals(pwd)) {
+                if (savedPwd.equals(pwd)) {
                     startActivity(new Intent(HomeActivity.this, FinderActivity.class));
                     dialog.dismiss();
                 } else {
@@ -94,10 +115,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         CreatePwdDialog dialog = new CreatePwdDialog(this, "创建密码", new CreatePwdDialog.OnBtnClickListener() {
             @Override
             public void onConfirm(CreatePwdDialog dialog, String pwd, String pwdConfirm) {
-                if(TextUtils.isEmpty(pwd) || TextUtils.isEmpty(pwdConfirm)) {
+                if (TextUtils.isEmpty(pwd) || TextUtils.isEmpty(pwdConfirm)) {
                     Toast.makeText(getApplicationContext(), "请输入密码", Toast.LENGTH_SHORT).show();
                 } else {
-                    if(pwd.equals(pwdConfirm)) {
+                    if (pwd.equals(pwdConfirm)) {
                         getSharedPreferences("setting", MODE_PRIVATE).edit().putString("password", pwd).apply();
                         startActivity(new Intent(HomeActivity.this, FinderActivity.class));
                         dialog.dismiss();
@@ -149,10 +170,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 view = convertView;
             }
 
-            ((ImageView)view.findViewById(R.id.iv_logo)).setImageResource(mLogos[position]);
+            ((ImageView) view.findViewById(R.id.iv_logo)).setImageResource(mLogos[position]);
             ((TextView) view.findViewById(R.id.tv_name)).setText(mNames[position]);
 
             return view;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0) {
+            Log.d(TAG, "权限申请成功");
         }
     }
 }

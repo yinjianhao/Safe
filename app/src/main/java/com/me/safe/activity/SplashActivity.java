@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,8 +31,10 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -74,6 +77,8 @@ public class SplashActivity extends AppCompatActivity {
         if (tvVersionName != null) {
             tvVersionName.setText("版本号:" + getVersionName());
         }
+
+        copyDB();
 
         SharedPreferences setting = getSharedPreferences("setting", MODE_PRIVATE);
         if (setting.getBoolean("update", true)) {
@@ -250,6 +255,45 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    /**
+     * 拷贝数据库
+     */
+    private void copyDB() {
+        InputStream in = null;
+        FileOutputStream out = null;
+        File filesDir = getFilesDir();   // data/data/file
+        File file = new File(filesDir, "address.db");
+
+        if(file.exists()) {
+            return;
+        }
+
+        try {
+            AssetManager assets = getAssets();
+            in = assets.open("address.db");
+            out = new FileOutputStream(file);
+
+            int len;
+            byte[] bytes = new byte[1024];
+            while ((len = in.read(bytes)) != -1) {
+                out.write(bytes, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

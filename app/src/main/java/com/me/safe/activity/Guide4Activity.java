@@ -1,14 +1,17 @@
 package com.me.safe.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.me.safe.R;
 
-public class Guide4Activity extends BaseGuideActivity implements View.OnClickListener{
+public class Guide4Activity extends BaseGuideActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,29 @@ public class Guide4Activity extends BaseGuideActivity implements View.OnClickLis
         Button btnPrev = (Button) findViewById(R.id.btn_prev);
         if (btnPrev != null) {
             btnPrev.setOnClickListener(this);
+        }
+
+        CheckBox cbProtect = (CheckBox) findViewById(R.id.cb_protect);
+        if (cbProtect != null) {
+            final SharedPreferences sharedPreferences = getSharedPreferences("setting", MODE_PRIVATE);
+
+            boolean isProtect = sharedPreferences.getBoolean("isProtect", false);
+            if (isProtect) {
+                cbProtect.setText("您已开启防盗保护");
+                cbProtect.setChecked(true);
+            }
+            cbProtect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        buttonView.setText("您已开启防盗保护");
+                        sharedPreferences.edit().putBoolean("isProtect", true).apply();
+                    } else {
+                        buttonView.setText("您还没有开启防盗保护");
+                        sharedPreferences.edit().remove("isProtect").apply();
+                    }
+                }
+            });
         }
     }
 

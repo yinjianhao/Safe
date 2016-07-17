@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <!-- 添加权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:name=".activity.MyApplication"
@@ -27,7 +32,22 @@
         <activity android:name=".activity.Guide2Activity" />
         <activity android:name=".activity.FinderActivity" />
         <activity android:name=".activity.Guide3Activity" />
-        <activity android:name=".activity.Guide4Activity"></activity>
+        <activity android:name=".activity.Guide4Activity" />
+
+        <receiver android:name=".receiver.BootCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.SmsReceiver">
+            <intent-filter android:priority="1000000">
+                <action android:name="android.provider.Telephone.SMS_RECEIVER" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.CoreService" />
+
+        <activity android:name=".activity.ToolActivity"></activity>
     </application>
 
 </manifest>
