@@ -17,4 +17,10 @@
         <item name="android:textColor">#000</item>
         <item name="android:textSize">18sp</item>
     </style>
+    
+    <style name="borderUpDown">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">#000</item>
+    </style>
 </resources>

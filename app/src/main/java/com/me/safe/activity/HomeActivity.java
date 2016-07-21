@@ -59,6 +59,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             intent.setData(Uri.fromParts("package", getPackageName(), null));
                             startActivity(intent);
                             break;
+                        case 7:
+                            startActivity(new Intent(HomeActivity.this, ToolActivity.class));
+                            break;
                         case 8:
                             startActivity(new Intent(HomeActivity.this, SettingActivity.class));
                             break;

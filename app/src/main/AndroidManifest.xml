@@ -7,8 +7,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <!-- 添加权限 -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
@@ -47,7 +48,8 @@
 
         <service android:name=".service.CoreService" />
 
-        <activity android:name=".activity.ToolActivity"></activity>
+        <activity android:name=".activity.ToolActivity" />
+        <activity android:name=".activity.QueryAddressActivity"></activity>
     </application>
 
 </manifest>
