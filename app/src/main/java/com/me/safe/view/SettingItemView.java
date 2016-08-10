@@ -1,7 +1,6 @@
 package com.me.safe.view;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
@@ -24,6 +23,8 @@ public class SettingItemView extends LinearLayout {
     private String descOn;
     private String descOff;
     private String title;
+    private LinearLayout llBody;
+    private onChangeListener listener;
 
     public SettingItemView(Context context) {
         super(context);
@@ -42,16 +43,28 @@ public class SettingItemView extends LinearLayout {
      * 初始化view
      */
     private void initView() {
-        View view = View.inflate(mContext, R.layout.view_setting_item, null);
+        final View view = View.inflate(mContext, R.layout.view_setting_item, null);
         this.addView(view);
 
+        llBody = (LinearLayout) findViewById(R.id.ll_body);
         tvTitle = (TextView) view.findViewById(R.id.tv_title);
         tvDesc = (TextView) view.findViewById(R.id.tv_desc);
         cbUpdate = (CheckBox) view.findViewById(R.id.cb_update);
+
+        llBody.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleChecked();
+                if (listener != null) {
+                    listener.onChange(SettingItemView.this, isChecked());
+                }
+            }
+        });
     }
 
     /**
      * 初始化自定义属性
+     *
      * @param attrs 自定义属性
      */
     private void initAttrs(AttributeSet attrs) {
@@ -77,5 +90,13 @@ public class SettingItemView extends LinearLayout {
         } else {
             tvDesc.setText(descOff);
         }
+    }
+
+    public void setOnChangeListener(onChangeListener onChangeListener) {
+        this.listener = onChangeListener;
+    }
+
+    public interface onChangeListener {
+        void onChange(View v, Boolean isChecked);
     }
 }

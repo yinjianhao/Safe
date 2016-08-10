@@ -1,15 +1,14 @@
 package com.me.safe.activity;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.me.safe.R;
 import com.me.safe.view.SettingItemView;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingActivity extends AppCompatActivity {
 
     private SettingItemView svUpdate;
     private SharedPreferences setting;
@@ -23,29 +22,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         svUpdate = (SettingItemView) findViewById(R.id.sv_update);
         if (svUpdate != null) {
-            svUpdate.setOnClickListener(this);
-            SharedPreferences setting = getSharedPreferences("setting", Context.MODE_PRIVATE);
+            svUpdate.setOnChangeListener(new SettingItemView.onChangeListener() {
+                @Override
+                public void onChange(View v, Boolean isChecked) {
+                    setting.edit().putBoolean("update", isChecked).apply();
+                }
+            });
+
             svUpdate.setChecked(setting.getBoolean("update", true));
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sv_update:
-                clickUpdateItem();
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * 点击更新选项
-     */
-    private void clickUpdateItem() {
-        Boolean checked = svUpdate.isChecked();
-        setting.edit().putBoolean("update", !checked).apply();
-        svUpdate.setChecked(!checked);
     }
 }
